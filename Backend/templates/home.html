@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Home - Mazingira Mind{% endblock %}
+{% block content %}
+<div class="text-center py-5">
+  <h1 class="fw-bold mb-4">Welcome to Mazingira Mind 🌍</h1>
+  <p class="lead mb-5">
+    Supporting mental health through technology, resources, and human connection.  
+    Explore our tools, connect with our chatbot, and access materials for your wellness journey.
+  </p>
+  <a href="/about" class="btn btn-primary btn-lg me-3">Learn More</a>
+  <a href="/chatbot" class="btn btn-outline-secondary btn-lg">Chat with Us</a>
+</div>
+
+<div class="row text-center mt-5">
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h5 class="card-title">📘 Materials</h5>
+        <p class="card-text">Access learning resources and guides designed to support your mental health journey.</p>
+        <a href="/materials" class="btn btn-sm btn-outline-primary">Explore</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h5 class="card-title">🤖 Chatbot</h5>
+        <p class="card-text">Talk to our chatbot anytime for quick mental wellness support and guidance.</p>
+        <a href="/chatbot" class="btn btn-sm btn-outline-primary">Chat Now</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h5 class="card-title">💳 Payments</h5>
+        <p class="card-text">Support our mission and contribute to building accessible mental health tools.</p>
+        <a href="/payments" class="btn btn-sm btn-outline-primary">Contribute</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

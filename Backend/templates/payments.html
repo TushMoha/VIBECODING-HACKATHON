@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <!-- Donation Section -->
+  <h1 class="fw-bold mb-4 text-center">Support Us</h1>
+  <p class="lead text-center">Your contributions help us expand access to mental wellness resources.</p>
+  <div class="card shadow-sm p-4 mb-5 text-center">
+    <h5>Make a Donation</h5>
+    <p>We accept payments through MPESA, PayPal, and Credit Card.</p>
+    <button class="btn btn-success" onclick="startPayment(100, 'donation', 'general_donation')">Donate Now</button>
+  </div>
+
+  <!-- Payment Plans Section -->
+  <h2 class="fw-bold mb-4 text-center">Payment Plans</h2>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    <div class="col">
+      <div class="card shadow-sm text-center h-100">
+        <div class="card-body">
+          <h5 class="card-title">Basic</h5>
+          <p class="price">Free</p>
+          <ul class="list-unstyled small">
+            <li>Limited AI chat</li>
+            <li>Basic assessment</li>
+          </ul>
+          <button class="btn btn-outline-primary" disabled>Current</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card shadow-sm text-center h-100">
+        <div class="card-body">
+          <h5 class="card-title">Premium</h5>
+          <p class="price">KES 1,500 / mo</p>
+          <ul class="list-unstyled small">
+            <li>Unlimited AI chat</li>
+            <li>Advanced resources</li>
+          </ul>
+          <button class="btn btn-primary" onclick="startPayment(1500, 'premium', 'premium_monthly')">Go Premium</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card shadow-sm text-center h-100">
+        <div class="card-body">
+          <h5 class="card-title">Therapy Session</h5>
+          <p class="price">KES 2,500 / session</p>
+          <ul class="list-unstyled small">
+            <li>50-minute session</li>
+            <li>Licensed professional</li>
+          </ul>
+          <button class="btn btn-primary" onclick="startPayment(2500, 'therapy', 'therapy_session')">Book Session</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card shadow-sm text-center h-100">
+        <div class="card-body">
+          <h5 class="card-title">Wellness Plan</h5>
+          <p class="price">KES 500</p>
+          <ul class="list-unstyled small">
+            <li>Detailed assessment</li>
+            <li>Personalized plan</li>
+          </ul>
+          <button class="btn btn-primary" onclick="startPayment(500, 'assessment', 'wellness_plan')">Buy Plan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function startPayment(amount, serviceType, ref) {
+  const payload = {
+    amount,
+    service_type: serviceType,
+    user_id: localStorage.getItem("mm_user") || "guest",
+    phone_number: prompt("Enter your phone number (Safaricom):", "07XXXXXXXX") || "",
+    email: prompt("Enter your email (optional):", "") || ""
+  };
+
+  if (!payload.phone_number.trim()) {
+    alert("Phone number is required.");
+    return;
+  }
+
+  fetch("/api/pay/create", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success && data.payment_url) {
+      window.location.href = data.payment_url; // redirect to InstaSend checkout
+    } else {
+      alert(data.error || "Payment could not be initiated.");
+    }
+  })
+  .catch(() => alert("Network error starting payment."));
+}
+</script>
+{% endblock %}

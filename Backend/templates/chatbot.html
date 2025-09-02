@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Chatbot - Mazingira Mind{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="fw-bold mb-4 text-center">🤖 Chat with Mazingira Bot</h1>
+  <p class="lead text-center mb-5">Your supportive companion for quick mental wellness guidance.</p>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0">
+        <div class="card-body">
+          <div id="chatbox" class="mb-3 p-3 bg-light rounded"
+               style="height:400px; overflow-y:auto;">
+            <!-- Chat messages will appear here -->
+          </div>
+          <div class="d-flex">
+            <input type="text" id="userInput"
+                   class="form-control me-2"
+                   placeholder="Type your message..." />
+            <button id="sendBtn" class="btn btn-primary px-4">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .chat-message {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+  }
+  .chat-user {
+    background-color: #0d6efd;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+  }
+  .chat-bot {
+    background-color: #e9ecef;
+    color: #212529;
+    margin-right: auto;
+    text-align: left;
+  }
+</style>
+
+<script>
+  const chatbox = document.getElementById("chatbox");
+  const userInput = document.getElementById("userInput");
+  const sendBtn = document.getElementById("sendBtn");
+
+  function appendMessage(sender, message) {
+    const div = document.createElement("div");
+    div.classList.add("chat-message", sender === "You" ? "chat-user" : "chat-bot");
+    div.innerHTML = `<strong>${sender}:</strong><br>${message}`;
+    chatbox.appendChild(div);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
+    appendMessage("You", message);
+    userInput.value = "";
+
+    fetch("/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ message })
+    })
+    .then(res => res.json())
+    .then(data => {
+      appendMessage("Bot", data.response);
+    })
+    .catch(() => {
+      appendMessage("Bot", "⚠️ Error connecting to server.");
+    });
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  userInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+</script>
+{% endblock %}
